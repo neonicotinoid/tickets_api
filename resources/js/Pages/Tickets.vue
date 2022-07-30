@@ -28,10 +28,11 @@
                                     </div>
                                 </div>
                                 <div class="ml-auto">
-                                    <button class="bg-blue-500 rounded-lg text-white text-sm px-3 py-1 shadow-sm hover:bg-blue-600">
+                                    <button @click="openTicket(ticket)" class="bg-blue-500 rounded-lg text-white text-sm px-3 py-1 shadow-sm hover:bg-blue-600">
                                         Ответить
                                     </button>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -39,17 +40,32 @@
             </div>
         </div>
     </BreezeAuthenticatedLayout>
+    <EditModal v-if="isEditModalOpen" :open="isEditModalOpen" :ticket="this.editableTicket" @close="isEditModalOpen = false"/>
 </template>
 
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from "@inertiajs/inertia-vue3";
+import ModalWindow from "@/Components/ModalWindow.vue";
+import EditModal from "@/Components/Ticket/EditModal.vue";
 export default {
     name: "Tickets",
-    components: {BreezeAuthenticatedLayout, Head},
+    components: {EditModal, BreezeAuthenticatedLayout, Head, ModalWindow},
     props: {
         tickets: {
             type: Array,
+        }
+    },
+    data() {
+        return {
+            isEditModalOpen: false,
+            editableTicket: null,
+        }
+    },
+    methods: {
+        openTicket: function (ticket) {
+            this.isEditModalOpen = true;
+            this.editableTicket = ticket;
         }
     }
 }
