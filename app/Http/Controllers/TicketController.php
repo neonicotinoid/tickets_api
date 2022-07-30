@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TicketCollection;
+use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,7 +13,7 @@ class TicketController extends Controller
     public function index()
     {
         return Inertia::render('Tickets', [
-            'tickets' => Ticket::query()->get(),
+            'tickets' => new TicketCollection(Ticket::all()),
         ]);
     }
 
@@ -27,7 +29,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        //
+        return response()->json(new TicketResource($ticket));
     }
 
     public function edit(Ticket $ticket)
