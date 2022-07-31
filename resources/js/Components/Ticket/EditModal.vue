@@ -35,12 +35,12 @@
 
             <div>
                 <FormGroup label="Комментарий модератора">
-                    <TextareaInput/>
+                    <TextareaInput v-model="editTicket.comment"/>
                 </FormGroup>
             </div>
         </div>
         <div class="mt-6">
-            <button class="border-2 border-blue-500 px-4 py-2 rounded-xl shadow-sm font-semibold text-blue-600 hover:bg-blue-500 hover:text-white duration-150">
+            <button @click="approveTicket" class="border-2 border-blue-500 px-4 py-2 rounded-xl shadow-sm font-semibold text-blue-600 hover:bg-blue-500 hover:text-white duration-150">
                 Ответить на обращение
             </button>
         </div>
@@ -73,7 +73,7 @@ export default {
     },
     methods: {
         approveTicket() {
-            this.editTicket.put(route('requests.update', this.ticket.id));
+            this.editTicket.put(route('requests.resolve', this.ticket.id));
         }
     }
 }

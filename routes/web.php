@@ -30,7 +30,6 @@ Route::get('/dashboard', function () {
 
 Route::get('/requests', [\App\Http\Controllers\TicketController::class, 'index'])->name('requests.index')->middleware(['auth']);
 Route::post('/requests', [\App\Http\Controllers\TicketController::class, 'store'])->name('requests.store');
-Route::put('/requests/{ticket}', [\App\Http\Controllers\TicketController::class, 'update'])->name('requests.update');
-
+Route::put('/requests/{ticket}', [\App\Http\Controllers\TicketController::class, 'resolve'])->name('requests.resolve');
 
 require __DIR__.'/auth.php';
