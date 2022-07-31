@@ -34,6 +34,4 @@ class Ticket extends Model
     {
         return $query->where('status', TicketStatus::Resolved->value);
     }
-
-
 }

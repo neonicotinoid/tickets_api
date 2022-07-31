@@ -8,14 +8,13 @@ use App\Models\Ticket;
 
 class ResolveTicketAction
 {
-
     /**
      * @throws TicketAlreadyResolvedException
      */
     public function __invoke(Ticket $ticket, string $comment): Ticket
     {
         if ($ticket->status === TicketStatus::Resolved) {
-            throw new TicketAlreadyResolvedException('Ticket (id: ' . $ticket->id . ') you trying to resolve already resolved');
+            throw new TicketAlreadyResolvedException('Ticket (id: '.$ticket->id.') you trying to resolve already resolved');
         }
         $ticket->comment = $comment;
         $ticket->status = TicketStatus::Resolved;
@@ -23,5 +22,4 @@ class ResolveTicketAction
 
         return $ticket;
     }
-
 }

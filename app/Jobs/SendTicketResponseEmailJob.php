@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Mail\SendTicketResponse;
 use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,8 +21,8 @@ class SendTicketResponseEmailJob implements ShouldQueue
      */
     public function __construct(
         public Ticket $ticket
-    )
-    {}
+    ) {
+    }
 
     /**
      * Execute the job.

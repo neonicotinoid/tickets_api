@@ -14,7 +14,6 @@ use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use TheSeer\Tokenizer\TokenCollection;
 
 class TicketController extends Controller
 {
@@ -53,7 +52,6 @@ class TicketController extends Controller
         }
 
         return response()->json(['ticket' => new TicketResource($ticket)], 200);
-
     }
 
     public function resolve(TicketResolveRequest $request, Ticket $ticket, ResolveTicketAction $resolve)
@@ -61,7 +59,7 @@ class TicketController extends Controller
         try {
             $resolve($ticket, $request->validated('comment'));
             $this->dispatch(new SendTicketResponseEmailJob($ticket));
-        } catch(TicketAlreadyResolvedException $e) {
+        } catch (TicketAlreadyResolvedException $e) {
             return redirect()->back()->withErrors([
                 'resolve' => $e->getMessage(),
             ]);
