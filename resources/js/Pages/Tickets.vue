@@ -9,63 +9,95 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="flex space-x-2 mb-8">
+                    <select v-model="filter.status" class="bg-white border-gray-300 text-sm shadow-sm rounded-lg">
+                        <option value="all">Все заявки</option>
+                        <option value="active">Только активные</option>
+                        <option value="resolved">Только завершенные</option>
+                    </select>
+                    <select v-model="filter.date" class="bg-white border-gray-300 text-sm shadow-sm rounded-lg">
+                        <option value="asc">Сначала новые</option>
+                        <option value="desc">Сначала старые</option>
+                    </select>
+                </div>
                     <div>
                         <div class="space-y-4">
-                            <div class="p-3 bg-white rounded-lg shadow flex" v-for="ticket in tickets" :key="ticket.id">
-                                <div class="mr-4">
-                                    <div>
-                                        {{ ticket.message}}
-                                    </div>
-                                    <div class="flex space-x-2 mt-2">
-                                        <div class="text-sm font-medium text-gray-600">
-                                            <span class="font-semibold">Имя:</span>
-                                            <span class="ml-1">{{ ticket.name }}</span>
-                                        </div>
-                                        <div class="text-sm font-medium text-gray-600">
-                                            <span class="font-semibold">Дата:</span>
-                                            <span class="ml-1">{{ ticket.created_at }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ml-auto">
-                                    <button @click="openTicket(ticket)" class="bg-blue-500 rounded-lg text-white text-sm px-3 py-1 shadow-sm hover:bg-blue-600">
-                                        Ответить
-                                    </button>
-                                </div>
-
-                            </div>
+                            <TransitionGroup
+                                enter-active-class="transition ease-out duration-300"
+                                enter-from-class="opacity-0 translate-y-95"
+                                enter-to-class="opacity-100 translate-y-100"
+                                leave-active-class="transition ease-in duration-300"
+                                leave-from-class="opacity-100 translate-y-100"
+                                leave-to-class="opacity-0 translate-y-95"
+                                appear>
+                                    <TicketCard v-for="ticket in tickets.data" :key="ticket.id" :ticket="ticket"/>
+                                </TransitionGroup>
                         </div>
+                        <pagination :links="tickets.meta.links" />
                     </div>
 
             </div>
         </div>
     </BreezeAuthenticatedLayout>
-    <EditModal v-if="isEditModalOpen" :open="isEditModalOpen" :ticket="this.editableTicket" @close="isEditModalOpen = false"/>
+
 </template>
 
 <script>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import {Inertia} from "@inertiajs/inertia";
 import {Head} from "@inertiajs/inertia-vue3";
 import ModalWindow from "@/Components/ModalWindow.vue";
 import EditModal from "@/Components/Ticket/EditModal.vue";
+import TicketCard from "@/Components/Ticket/TicketCard.vue";
+import Pagination from "@/Components/Pagination.vue";
 export default {
     name: "Tickets",
-    components: {EditModal, BreezeAuthenticatedLayout, Head, ModalWindow},
+    components: {TicketCard, EditModal, BreezeAuthenticatedLayout, Head, ModalWindow, Pagination},
     props: {
         tickets: {
-            type: Array,
+            data: {
+                type: Array,
+            },
         }
     },
     data() {
         return {
             isEditModalOpen: false,
             editableTicket: null,
+            filter: {
+                status: 'all',
+                date: 'asc'
+            },
         }
     },
     methods: {
         openTicket: function (ticket) {
             this.isEditModalOpen = true;
             this.editableTicket = ticket;
+        }
+    },
+    computed: {
+        filterQueryData() {
+            let filter = {};
+            if (this.filter.status !== 'all') {
+                filter.status = this.filter.status;
+            }
+            if (this.filter.date !== 'asc') {
+                filter.date = this.filter.date;
+            }
+            return filter;
+        }
+    },
+    watch: {
+        filter: {
+            handler() {
+                Inertia.visit(route('requests.index'), {
+                    only: ['tickets'],
+                    data: this.filterQueryData,
+                    preserveState: true,
+                })
+            },
+            deep: true,
         }
     }
 }

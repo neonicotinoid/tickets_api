@@ -1,5 +1,8 @@
 <template>
     <ModalWindow :showing="open">
+        <div class="text-lg font-semibold mb-8">
+            Модерация обращения
+        </div>
         <div class="space-y-4">
             <div>
                 <div class="text-sm text-gray-500 mb-0.5">Имя пользователя:</div>

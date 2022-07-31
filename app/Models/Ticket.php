@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TicketStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,4 +22,16 @@ class Ticket extends Model
     protected $casts = [
         'status' => TicketStatus::class,
     ];
+
+    public function scopeActive(Builder $query)
+    {
+        return $query->where('status', TicketStatus::Active->value);
+    }
+
+    public function scopeResolved(Builder $query)
+    {
+        return $query->where('status', TicketStatus::Resolved->value);
+    }
+
+
 }
