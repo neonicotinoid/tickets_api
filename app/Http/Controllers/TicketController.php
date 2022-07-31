@@ -6,6 +6,7 @@ use App\Actions\ResolveTicketAction;
 use App\Enums\TicketStatus;
 use App\Exceptions\TicketAlreadyResolvedException;
 use App\Http\Requests\TicketResolveRequest;
+use App\Http\Requests\TicketStoreRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
 use App\Jobs\SendTicketResponseEmailJob;
@@ -41,19 +42,18 @@ class TicketController extends Controller
         ]);
     }
 
-    public function create()
+    public function store(TicketStoreRequest $request)
     {
-        //
-    }
+        $ticket = new Ticket($request->validated());
+        $ticket->status = TicketStatus::Active;
+        $ticket->save();
 
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($request->hasHeader('X-Inertia')) {
+            return redirect()->back()->with('success', 'Ваша заявка успешно отправлена');
+        }
 
-    public function show(Ticket $ticket)
-    {
-        return response()->json(new TicketResource($ticket));
+        return response()->json(['ticket' => new TicketResource($ticket)], 200);
+
     }
 
     public function resolve(TicketResolveRequest $request, Ticket $ticket, ResolveTicketAction $resolve)
@@ -68,20 +68,5 @@ class TicketController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    public function edit(Ticket $ticket)
-    {
-        //
-    }
-
-    public function update(Request $request, Ticket $ticket)
-    {
-        //
-    }
-
-    public function destroy(Ticket $ticket)
-    {
-        //
     }
 }

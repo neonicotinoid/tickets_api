@@ -6,12 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TicketStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -24,7 +19,9 @@ class TicketStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'message' => ['required', 'string'],
         ];
     }
 }
