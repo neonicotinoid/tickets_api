@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TicketStatus;
+use App\Filters\TicketFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,5 +34,10 @@ class Ticket extends Model
     public function scopeResolved(Builder $query)
     {
         return $query->where('status', TicketStatus::Resolved->value);
+    }
+
+    public function scopeFilter(Builder $query, TicketFilter $filter): Builder
+    {
+        return $filter->apply($query);
     }
 }
