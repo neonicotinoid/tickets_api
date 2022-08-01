@@ -19,8 +19,6 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -30,6 +28,13 @@ Route::get('/dashboard', function () {
 
 Route::get('/requests', [\App\Http\Controllers\TicketController::class, 'index'])->name('requests.index')->middleware(['auth']);
 Route::post('/requests', [\App\Http\Controllers\TicketController::class, 'store'])->name('requests.store');
-Route::put('/requests/{ticket}', [\App\Http\Controllers\TicketController::class, 'resolve'])->name('requests.resolve');
+
+Route::post('/req', function () {
+    return \App\Models\Ticket::find(55);
+})->middleware('auth:sanctum');
+
+Route::put('/requests/{ticket}', [\App\Http\Controllers\TicketController::class, 'resolve'])
+    ->middleware('auth:sanctum')
+    ->name('requests.resolve');
 
 require __DIR__.'/auth.php';
