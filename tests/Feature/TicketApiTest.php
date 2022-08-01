@@ -13,11 +13,6 @@ class TicketApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_guest_store_ticket()
     {
         $this->postJson(route('api.requests.store'), [
@@ -25,7 +20,7 @@ class TicketApiTest extends TestCase
             'email' => 'email@example.com',
             'message' => 'my message',
         ])
-            ->assertStatus(200);
+            ->assertStatus(201);
 
         $this->assertDatabaseHas('tickets', [
             'name' => 'name',

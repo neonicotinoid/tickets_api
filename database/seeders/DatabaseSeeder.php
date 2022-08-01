@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+         User::factory()->create([
+             'name' => 'Test User',
+             'email' => 'test@example.com',
+         ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+         Ticket::factory(['created_at' => now()])->count(3)->create();
+         Ticket::factory(['created_at' => now()->subDays(3)])->count(3)->create();
+         Ticket::factory(5)->resolved()->create();
     }
 }
