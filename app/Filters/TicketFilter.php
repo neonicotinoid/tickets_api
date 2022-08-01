@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filters;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -21,12 +22,11 @@ class TicketFilter
         ->when($this->request->get('status') === 'resolved', function (Builder $query) {
             return $query->resolved();
         })
-        ->when($this->request->get('date') === 'desc', function (Builder $query) {
+        ->when($this->request->get('date') === 'desc' or ! $this->request->get('date'), function (Builder $query) {
             return $query->orderBy('created_at', 'DESC');
         })
-        ->when($this->request->get('date') === 'asc', function (Builder $query) {
+        ->when($this->request->get('date') === 'ASC', function (Builder $query) {
             return $query->orderBy('created_at', 'ASC');
         });
     }
-
 }

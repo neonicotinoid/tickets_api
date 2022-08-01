@@ -16,8 +16,8 @@
                         <option value="resolved">Только завершенные</option>
                     </select>
                     <select v-model="filter.date" class="bg-white border-gray-300 text-sm shadow-sm rounded-lg">
-                        <option value="asc">Сначала новые</option>
-                        <option value="desc">Сначала старые</option>
+                        <option value="asc">Сначала старые</option>
+                        <option value="desc">Сначала новые</option>
                     </select>
                 </div>
                     <div>
@@ -66,7 +66,7 @@ export default {
             editableTicket: null,
             filter: {
                 status: 'all',
-                date: 'asc'
+                date: 'desc'
             },
         }
     },
@@ -82,7 +82,7 @@ export default {
             if (this.filter.status !== 'all') {
                 filter.status = this.filter.status;
             }
-            if (this.filter.date !== 'asc') {
+            if (this.filter.date !== 'desc') {
                 filter.date = this.filter.date;
             }
             return filter;

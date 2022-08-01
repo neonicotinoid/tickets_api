@@ -71,4 +71,45 @@ class TicketApiTest extends TestCase
             'comment' => 'This is moderator comment',
         ])->assertStatus(422);
     }
+
+    public function test_it_sorts_tickets_by_status()
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $resolved = Ticket::factory(['comment' => 'Завершенное обращение'])
+            ->resolved()
+            ->create();
+        $active = Ticket::factory(['message' => 'Актуальное обращение'])
+            ->create();
+
+        $this->getJson(route('api.requests.index', ['status' => 'active']))
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.id', $active->id)
+            ->assertJsonMissingPath('data.1.id');
+
+        $this->getJson(route('api.requests.index', ['status' => 'resolved']))
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.id', $resolved->id)
+            ->assertJsonMissingPath('data.1.id');
+    }
+
+    public function test_it_sorts_by_created_at()
+    {
+        Sanctum::actingAs(User::factory()->create());
+        Ticket::factory()
+            ->count(2)
+            ->sequence(
+                ['message' => 'Старое обращение', 'created_at' => now()->subDays(2)],
+                ['message' => 'Новое обращение', 'created_at' => now()]
+            )->create();
+
+        $this->getJson(route('api.requests.index'))
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.message', 'Новое обращение')
+            ->assertJsonPath('data.1.message', 'Старое обращение');
+
+        $this->getJson(route('api.requests.index', ['date' => 'asc']))
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.message', 'Старое обращение')
+            ->assertJsonPath('data.1.message', 'Новое обращение');
+    }
 }

@@ -3,15 +3,12 @@
 namespace Tests\Feature;
 
 use App\Actions\ResolveTicketAction;
-use App\Enums\TicketStatus;
 use App\Jobs\SendTicketResponseEmailJob;
 use App\Mail\SendTicketResponse;
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 

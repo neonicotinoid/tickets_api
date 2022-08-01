@@ -33,16 +33,32 @@
                 </div>
             </div>
 
-            <div>
+            <div v-if="ticket.status === 'active'">
                 <FormGroup label="Комментарий модератора">
                     <TextareaInput v-model="editTicket.comment"/>
                 </FormGroup>
             </div>
+            <div v-if="ticket.status === 'resolved'">
+                <div class="text-sm text-gray-500 mb-0.5">Вопрос:</div>
+                <div class="font-medium text-gray-600">
+                    {{ticket.comment}}
+                </div>
+            </div>
         </div>
         <div class="mt-6">
-            <button @click="approveTicket" class="border-2 border-blue-500 px-4 py-2 rounded-xl shadow-sm font-semibold text-blue-600 hover:bg-blue-500 hover:text-white duration-150">
-                Ответить на обращение
+            <button @click="approveTicket"
+                    class="border-2 border-blue-500 px-4 py-2 rounded-xl shadow-sm font-semibold text-blue-600 hover:bg-blue-500 hover:text-white duration-150
+                    disabled:bg-gray-200 disabled:border-gray-200 disabled:cursor-not-allowed disabled:text-gray-500"
+                    :disabled="ticket.status === 'resolved'"
+            >
+                {{ this.btnText }}
             </button>
+        </div>
+
+        <div class="mt-4 h-4">
+            <div v-if="$page.props.errors.resolve" class="text-red-500 text-sm font-medium">
+                {{$page.props.errors.resolve}}
+            </div>
         </div>
     </ModalWindow>
 </template>
@@ -74,6 +90,16 @@ export default {
     methods: {
         approveTicket() {
             this.editTicket.put(route('requests.resolve', this.ticket.id));
+        }
+    },
+    computed: {
+        btnText() {
+            if (this.ticket.status === 'active') {
+                return 'Ответить на обращение';
+            }
+            if (this.ticket.status === 'resolved') {
+                return 'Обращение уже закрыто';
+            }
         }
     }
 }

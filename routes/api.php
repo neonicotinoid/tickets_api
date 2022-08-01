@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json(['user' => $request->user()]);
 });
 
-Route::name('api.')->group(function() {
+Route::name('api.')->group(function () {
     Route::get('requests', [\App\Http\Controllers\Api\TicketController::class, 'index'])
         ->middleware('auth:sanctum')
         ->name('requests.index');

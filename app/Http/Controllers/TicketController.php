@@ -11,7 +11,6 @@ use App\Http\Requests\TicketStoreRequest;
 use App\Http\Resources\TicketCollection;
 use App\Jobs\SendTicketResponseEmailJob;
 use App\Models\Ticket;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
